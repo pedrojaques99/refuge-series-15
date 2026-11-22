@@ -43,5 +43,5 @@ CTA fixo "Garantir lugar" some quando o RSVP está na tela.
 - [x] carga inicial 148 KB JS gz (resto em chunk preguiçoso), imagens WebP
 - [x] reduced-motion respeitado, áudio só após gesto
 - [x] screenshot mobile verificado (CDP 390x844 + fluxo da lista)
-- [ ] repo público no GitHub
+- [x] repo público no GitHub: github.com/pedrojaques99/refuge-series-15
 - [ ] deploy Vercel CLI (prod)

@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
 import { ShaderHalftone } from '@/components/ui/shader-halftone'
 import { MANIFESTO } from '@/content'
+import { Reveal } from './Reveal'
 
 /* cada palavra acende conforme a leitura avança: o texto anda no ritmo de quem rola */
 function Word({ w, i, n, p }: { w: string; i: number; n: number; p: MotionValue<number> }) {
@@ -31,6 +32,7 @@ export function Manifesto() {
           </p>
         </div>
 
+        <Reveal>
         <figure className="flex flex-col gap-3">
           <div className="relative overflow-hidden">
             <ShaderHalftone
@@ -48,6 +50,7 @@ export function Manifesto() {
             <span>Arraste o dedo: lupa</span>
           </figcaption>
         </figure>
+        </Reveal>
 
         <p className="max-w-[34ch] text-base leading-relaxed text-foreground/70">
           Um refúgio onde encontramos as pessoas que pensam parecido, onde podemos apreciar a arte e, principalmente,

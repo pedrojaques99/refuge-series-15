@@ -5,6 +5,7 @@ import { MagneticCta } from '@/components/ui/magnetic-cta'
 import { EVENT } from '@/content'
 import { EASE_DRAWER, EASE_OUT } from '@/lib/motion'
 import { cn } from '@/lib/utils'
+import { LineUp } from './Reveal'
 
 import { loadPass, savePass, type Pass } from '@/pass'
 
@@ -122,7 +123,7 @@ export function Rsvp() {
         <header className="flex flex-col gap-5">
           <p className="label-mono text-fundacao/60">Lista · entrada gratuita</p>
           <h2 className="font-display text-[clamp(2.2rem,11vw,3.8rem)] leading-[0.95] tracking-[-0.045em]">
-            {pass?.confirmed ? 'Lugar guardado.' : 'Entra na lista.'}
+            <LineUp key={pass?.confirmed ? 'ok' : 'in'} lines={pass?.confirmed ? ['Lugar', 'guardado.'] : ['Entra na', 'lista.']} />
           </h2>
           <p className="max-w-[38ch] text-base leading-relaxed text-fundacao/70">
             {pass?.confirmed

@@ -4,6 +4,7 @@ import { deck } from '@/player/deck'
 import { useDeck } from '@/player/useDeck'
 import { MiniDisc } from './Vinyl'
 import { cn } from '@/lib/utils'
+import { LineUp, Reveal } from './Reveal'
 
 /* contracapa: o lineup é a tracklist, e cada faixa toca o groove daquele set */
 export function Tracklist() {
@@ -14,9 +15,7 @@ export function Tracklist() {
       <div className="mx-auto flex max-w-[560px] flex-col gap-10">
         <header className="flex items-end justify-between gap-4">
           <h2 className="font-display text-[clamp(2rem,10vw,3.4rem)] leading-[0.95] tracking-[-0.04em]">
-            Lado A
-            <br />
-            Lado B
+            <LineUp lines={['Lado A', 'Lado B']} />
           </h2>
           <p className="label-mono max-w-[18ch] text-right leading-[1.5] text-fundacao/60">
             Cinco sets, das 23h às 08h. Toque numa faixa.
@@ -29,6 +28,7 @@ export function Tracklist() {
             const sideStart = i === 0 || TRACKS[i - 1].side !== t.side
             return (
               <li key={t.artist}>
+              <Reveal delay={Math.min(i * 0.06, 0.3)} y={18}>
                 {sideStart && (
                   <p className="label-mono border-b border-fundacao pb-2 pt-6 text-fundacao/60">Lado {t.side}</p>
                 )}
@@ -81,6 +81,7 @@ export function Tracklist() {
                     />
                   )}
                 </button>
+              </Reveal>
               </li>
             )
           })}

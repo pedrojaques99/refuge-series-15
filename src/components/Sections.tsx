@@ -3,6 +3,7 @@ import { Countdown } from '@/components/ui/countdown'
 import { Mark, Wordmark } from '@/brand/logos'
 import { Stacked } from '@/brand/stacked'
 import { EVENT } from '@/content'
+import { Reveal } from './Reveal'
 
 const sep = <Mark title="" className="h-[0.7em] w-auto" />
 
@@ -52,7 +53,9 @@ export function Footer() {
   return (
     <footer id="rodape" className="dark bg-background px-4 pb-32 pt-20 text-foreground sm:px-8">
       <div className="mx-auto flex max-w-[560px] flex-col gap-12">
-        <Stacked className="w-full text-estrutura" />
+        <Reveal y={60}>
+          <Stacked className="w-full text-estrutura" />
+        </Reveal>
         <div className="grid grid-cols-2 gap-6 label-mono leading-[1.6] text-muted-foreground">
           <p>
             Refuge® Series 15
