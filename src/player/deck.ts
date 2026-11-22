@@ -11,6 +11,10 @@ import { motionValue } from 'motion/react'
 import { TRACKS } from '../content'
 import { crackle, renderGroove, reversed } from './synth'
 
+/** tempos do braço da agulha, casados com a transição em Vinyl.tsx (1100ms) */
+const NEEDLE_DROP_MS = 950
+const NEEDLE_MOVE_MS = 700
+
 export const NOMINAL_DEG_S = (100 / 3 / 60) * 360 // 33⅓ rpm = 200°/s
 
 type Listener = () => void
@@ -36,6 +40,8 @@ class Deck {
   private last = 0
   private raf = 0
   private reduce = false
+  /** instante (performance.now) em que a agulha encosta no vinil; antes disso, silêncio */
+  private needleAt = Infinity
 
   constructor() {
     if (typeof window === 'undefined') return
@@ -119,6 +125,8 @@ class Deck {
 
   async setPlaying(on: boolean) {
     this.playing = on
+    // o braço leva ~1,1 s pra pousar (Vinyl.tsx): o som entra quando a agulha toca o sulco
+    this.needleAt = on ? performance.now() + (this.reduce ? 0 : NEEDLE_DROP_MS) : Infinity
     this.emit()
     if (on) await this.ensureAudio()
     this.vibrate(on ? [6, 40, 6] : 10)
@@ -128,8 +136,9 @@ class Deck {
     if (i === this.track && this.playing) return
     this.track = i
     this.emit()
-    // a agulha levanta: um pequeno freio antes da faixa nova entrar
+    // a agulha levanta e pousa no sulco da faixa nova: silêncio no trajeto
     this.vel *= 0.35
+    if (this.playing) this.needleAt = performance.now() + (this.reduce ? 0 : NEEDLE_MOVE_MS)
     await this.setPlaying(true)
     if (this.ctx) await this.load(i)
   }
@@ -201,8 +210,9 @@ class Deck {
     if (!this.ctx || !this.fwd || !this.rev || !this.filter || !this.hiss) return
     const now = this.ctx.currentTime
     const mag = Math.min(Math.abs(s), 3)
-    const audible = this.playing || this.dragging ? 1 : Math.min(1, mag * 1.2)
-    const level = Math.min(1, mag * 3) * audible
+    // só soa com a agulha no disco: braço levantado = silêncio, mesmo girando ou riscando
+    const needle = this.playing && performance.now() >= this.needleAt
+    const level = needle ? Math.min(1, mag * 3) : 0
     const rate = Math.max(0.02, mag)
     const tc = this.dragging ? 0.012 : 0.04
     this.fwd.src.playbackRate.setTargetAtTime(rate, now, tc)
@@ -211,7 +221,7 @@ class Deck {
     this.rev.gain.gain.setTargetAtTime(s < 0 ? level : 0, now, 0.01)
     // devagar = abafado, como o vinil de verdade perdendo agudo
     this.filter.frequency.setTargetAtTime(400 + Math.min(mag, 1) ** 2 * 17600, now, 0.03)
-    this.hiss.gain.setTargetAtTime(mag > 0.05 ? 0.05 : 0, now, 0.08)
+    this.hiss.gain.setTargetAtTime(needle ? 0.05 : 0, now, needle ? 0.08 : 0.02)
   }
 
   destroy() {
