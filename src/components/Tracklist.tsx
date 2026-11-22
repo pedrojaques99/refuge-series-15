@@ -63,7 +63,7 @@ export function Tracklist() {
                           transition={{ type: 'spring', stiffness: 420, damping: 26 }}
                           className="size-6 shrink-0"
                         >
-                          <MiniDisc className="size-6" />
+                          <MiniDisc className="size-6" art={i} />
                         </motion.span>
                       )}
                     </AnimatePresence>

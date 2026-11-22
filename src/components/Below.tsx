@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Crate } from './Crate'
 import { Manifesto } from './Manifesto'
 import { Tracklist } from './Tracklist'
 import { Rsvp } from './Rsvp'
@@ -14,6 +15,7 @@ export default function Below() {
   return (
     <>
       <Band />
+      <Crate />
       <Manifesto />
       <Tracklist />
       <Clock />

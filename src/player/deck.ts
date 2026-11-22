@@ -26,6 +26,8 @@ class Deck {
   dragging = false
   muted = false
   track = 0
+  /** pitch fader, em % (−8 a +8, como num toca-discos de DJ) */
+  pitch = 0
   ready = false
 
   private listeners = new Set<Listener>()
@@ -143,6 +145,20 @@ class Deck {
     if (this.ctx) await this.load(i)
   }
 
+  /** põe o disco no prato sem soltar a agulha (escolha na caixa de discos) */
+  async cue(i: number) {
+    if (i === this.track) return
+    if (this.playing) return this.selectTrack(i)
+    this.track = i
+    this.emit()
+    if (this.ctx) await this.load(i)
+  }
+
+  setPitch(p: number) {
+    this.pitch = Math.max(-8, Math.min(8, p))
+    this.emit()
+  }
+
   setMuted(m: boolean) {
     this.muted = m
     if (this.master && this.ctx) this.master.gain.setTargetAtTime(m ? 0 : 0.9, this.ctx.currentTime, 0.05)
@@ -191,7 +207,7 @@ class Deck {
     if (!this.dragging) {
       if (this.playing) {
         const k = 1 - Math.exp(-dt * 5.5) // motor: ~0,5 s pra chegar em 33⅓
-        this.vel += (NOMINAL_DEG_S - this.vel) * k
+        this.vel += (NOMINAL_DEG_S * (1 + this.pitch / 100) - this.vel) * k
       } else {
         this.vel *= Math.exp(-dt * 1.4) // prato solto, desacelera no atrito
         if (Math.abs(this.vel) < 0.5) this.vel = 0

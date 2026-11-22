@@ -1,8 +1,9 @@
 import { useRef } from 'react'
-import { motion, useTransform } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion, useTransform } from 'motion/react'
 import { deck } from '@/player/deck'
 import { useDeck } from '@/player/useDeck'
-import { Mark, Wordmark } from '@/brand/logos'
+import { ARTS, DiscFace } from './discArt'
+import { EASE_DRAWER } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 /* braço da agulha, no espaço 0..100 do disco: pivô fora do canto, agulha no sulco */
@@ -40,26 +41,10 @@ function Tonearm({ playing, track }: { playing: boolean; track: number }) {
   )
 }
 
-function Label() {
-  return (
-    <div className="absolute inset-[31%] rounded-full bg-cal shadow-[inset_0_0_0_1px_rgb(0_0_0/0.08)]">
-      {Array.from({ length: 8 }, (_, i) => (
-        <div key={i} className="absolute inset-0" style={{ transform: `rotate(${i * 45}deg)` }}>
-          <Mark title="" className="absolute left-1/2 top-[5%] w-[19%] -translate-x-1/2 text-fundacao" />
-        </div>
-      ))}
-      <Wordmark title="" className="absolute left-1/2 top-[33%] w-[34%] -translate-x-1/2 text-fundacao/80" />
-      {/* furo do eixo */}
-      <div className="absolute left-1/2 top-1/2 size-[9%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fundacao shadow-[inset_0_1px_2px_rgb(255_255_255/0.2)]" />
-      <span className="label-mono absolute bottom-[27%] left-1/2 -translate-x-1/2 whitespace-nowrap text-[clamp(5px,1.5vw,8px)] text-fundacao/70">
-        Series 15 · 33⅓
-      </span>
-    </div>
-  )
-}
-
 export function Vinyl({ className }: { className?: string }) {
   const { playing, track } = useDeck()
+  const reduce = useReducedMotion()
+  const art = ARTS[track % ARTS.length]
   const rotate = useTransform(deck.angle, (a) => a % 360)
   const g = useRef<{ x: number; y: number; cx: number; cy: number; a: number; t: number; moved: number; on: boolean } | null>(null)
 
@@ -124,9 +109,21 @@ export function Vinyl({ className }: { className?: string }) {
         onPointerCancel={onCancel}
         className="absolute inset-0 cursor-grab rounded-full [touch-action:pan-y] active:cursor-grabbing"
       >
-        <motion.div style={{ rotate }} className="grooves absolute inset-0 rounded-full shadow-[0_0_0_1px_rgb(0_0_0/0.6)]">
-          <Label />
-        </motion.div>
+        {/* troca de disco: o de antes sai pra esquerda, o novo entra girando da direita */}
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={art.id}
+            initial={reduce ? { opacity: 0 } : { x: '70%', opacity: 0, scale: 0.9 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { x: '-70%', opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.7, ease: EASE_DRAWER }}
+            className="absolute inset-0"
+          >
+            <motion.div style={{ rotate }} className="absolute inset-0 rounded-full shadow-[0_0_0_1px_rgb(0_0_0/0.6)]">
+              <DiscFace art={art} />
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
         <div className="sheen pointer-events-none absolute inset-0 rounded-full" aria-hidden />
       </div>
       <Tonearm playing={playing} track={track} />
@@ -134,15 +131,14 @@ export function Vinyl({ className }: { className?: string }) {
   )
 }
 
-/** o mesmo disco, pequeno, no dock */
-export function MiniDisc({ className }: { className?: string }) {
+/** o mesmo disco, pequeno: dock, tracklist. Sem `art`, segue o que está no prato */
+export function MiniDisc({ className, art }: { className?: string; art?: number }) {
+  const { track } = useDeck()
   const rotate = useTransform(deck.angle, (a) => a % 360)
+  const a = ARTS[(art ?? track) % ARTS.length]
   return (
-    <motion.div style={{ rotate }} className={cn('grooves relative aspect-square rounded-full', className)} aria-hidden>
-      <div className="absolute inset-[30%] rounded-full bg-cal">
-        <Mark title="" className="absolute left-1/2 top-[22%] w-[58%] -translate-x-1/2 text-fundacao" />
-        <div className="absolute left-1/2 top-1/2 size-[18%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fundacao" />
-      </div>
+    <motion.div style={{ rotate }} className={cn('relative aspect-square rounded-full', className)} aria-hidden>
+      <DiscFace art={a} mini />
     </motion.div>
   )
 }

@@ -98,13 +98,13 @@
 /* sulcos do vinil: anéis finos + faixas entre músicas */
 .grooves {
   background:
-    repeating-radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px),
+    repeating-radial-gradient(circle at 50% 50%, rgb(var(--groove, 255 255 255) / 0.035) 0 1px, transparent 1px 3px),
     radial-gradient(circle at 50% 50%,
-      transparent 0 34%, rgb(255 255 255 / 0.07) 34.3% 34.6%, transparent 35%
-      49%, rgb(255 255 255 / 0.06) 49.2% 49.5%, transparent 50%
-      63%, rgb(255 255 255 / 0.06) 63.2% 63.5%, transparent 64%
-      79%, rgb(255 255 255 / 0.05) 79.2% 79.5%, transparent 80%),
-    #0d0d0d;
+      transparent 0 34%, rgb(var(--groove, 255 255 255) / 0.07) 34.3% 34.6%, transparent 35%
+      49%, rgb(var(--groove, 255 255 255) / 0.06) 49.2% 49.5%, transparent 50%
+      63%, rgb(var(--groove, 255 255 255) / 0.06) 63.2% 63.5%, transparent 64%
+      79%, rgb(var(--groove, 255 255 255) / 0.05) 79.2% 79.5%, transparent 80%),
+    var(--disc, #0d0d0d);
 }
 /* reflexo fixo: a luz não gira com o disco, por isso o disco parece girar de verdade */
 .sheen {

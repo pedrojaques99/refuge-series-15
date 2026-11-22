@@ -9,6 +9,9 @@ e o pitch, o abafado e o sentido do áudio seguem a velocidade do prato.
 ## O que tem
 
 - **Vinil**: física de prato (motor, atrito, inércia), scratch com áudio reverso, braço da agulha que anda por faixa, leitor de RPM/pitch ao vivo, tique tátil no Android, rolagem que empurra o disco.
+- **5 artes de disco** tiradas do Figma (Anel, Retícula, Raio X, Cinza 01, Areia), uma por set. Trocar o disco anima a saída de um e a entrada do outro, e a agulha levanta no trajeto. Botão "Disco ↻" no hero.
+- **Caixa de discos** (`cover-flow` do registry): capas em perspectiva, arrasta e escolhe o que vai pro prato; acompanha quando o disco muda por outro lugar.
+- **Fader de tempo** (`fader` do registry): ±8% como num toca-discos de DJ, muda rotação e som juntos; duplo clique volta pro zero.
 - **Tracklist** Lado A / Lado B: cada faixa troca o groove (bpm e linha de baixo do set).
 - **Manifesto** com leitura palavra a palavra no scroll e foto em retícula com lupa (WebGL).
 - **Countdown** até a abertura da pista.
@@ -25,7 +28,7 @@ Tokens gerados pelo motor `@visant/brand-tokens` (AA em todos os pares), com o f
 ## Stack
 
 Vite + React 19 + TypeScript + Tailwind v4, `motion`, e peças do registry [@visant](https://ui.visantlabs.com):
-`ticket-stub`, `countdown`, `magnetic-cta`, `marquee`, `shader-halftone`.
+`ticket-stub`, `countdown`, `magnetic-cta`, `marquee`, `shader-halftone`, `cover-flow`, `fader`.
 
 Carga inicial ~148 KB gzip (o disco); o resto da página entra num chunk preguiçoso.
 
@@ -40,7 +43,7 @@ npm run build
 | Script | Pra quê |
 |---|---|
 | `node scripts/registry-add.mjs <peça...>` | instala peças do registry @visant sem prompt e junta o CSS delas em `src/registry.css` |
-| `node scripts/cdp-shots.mjs <pasta>` | capturas reais por CDP em 390×844 com toque: hero, disco tocando, scratch e cada seção. `FLOW=rsvp` testa a lista inteira; `W=1440 H=900` para desktop. Áudio sempre mudo |
+| `node scripts/cdp-shots.mjs <pasta>` | capturas reais por CDP em 390×844 com toque: hero, disco tocando, scratch e cada seção. `FLOW=rsvp` testa a lista inteira, `ARTS=n` troca o disco n vezes, `FADER=8` testa o tempo; `W=1440 H=900` para desktop. Áudio sempre mudo |
 | `node scripts/probe.mjs [url]` | mede se a thread principal responde e o tempo de quadro |
 
 ---

@@ -50,6 +50,21 @@ const arc = (a0, a1, n) => Array.from({ length: n }, (_, i) => { const a = (a0 +
 await drag(arc(-120, -60, 8).concat(arc(-60, -140, 10)), 12)
 console.log('após scratch', await js(`document.querySelector('#topo').innerText.match(/PITCH\s+(\S+)/i)?.[1]`))
 
+// ARTS=n: troca o disco n vezes pelo botão do hero e fotografa cada arte
+for (let k = 0; k < Number(process.env.ARTS ?? 0); k++) {
+  await js(`window.scrollTo(0,0);document.querySelector('[aria-label^="Trocar o disco"]').click()`)
+  await sleep(1100)
+  await shot(`art-${k + 1}`)
+}
+
+// FADER=v: move o pitch fader pra v% e lê o RPM resultante
+if (process.env.FADER) {
+  await js(`(()=>{const f=document.querySelector('visant-fader');const i=f.shadowRoot.querySelector('input');i.value='${process.env.FADER}';i.dispatchEvent(new Event('input',{bubbles:true}))})()`)
+  await sleep(1500)
+  console.log('fader', process.env.FADER, '->', await js(`document.querySelector('#topo').innerText.replace(/\s+/g,' ').match(/RPM \S+ PITCH \S+/i)?.[0]`))
+  await shot('fader')
+}
+
 if (process.env.FLOW === 'rsvp') {
   await js(`document.getElementById('lista').scrollIntoView()`)
   await sleep(600)

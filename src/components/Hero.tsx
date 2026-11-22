@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useReducedMotion } from 'motion/react'
 import { Vinyl } from './Vinyl'
+import { PitchFader } from './PitchFader'
+import { ARTS } from './discArt'
 import { Mark } from '@/brand/logos'
 import { deck } from '@/player/deck'
 import { useDeck } from '@/player/useDeck'
@@ -20,7 +22,7 @@ function PitchReadout() {
     if (rpm.current) rpm.current.textContent = (Math.abs(s) * 33.33).toFixed(1).padStart(4, '0')
     if (pitch.current) {
       const raw = deck.playing || deck.dragging ? (s - 1) * 100 : 0
-      const p = Math.abs(raw) < 0.05 ? 0 : raw
+      const p = Math.abs(raw) < 0.15 ? 0 : raw
       const clamped = Math.max(-99.9, Math.min(99.9, p))
       pitch.current.textContent = `${clamped >= 0 ? '+' : '−'}${Math.abs(clamped).toFixed(1)}%`
     }
@@ -125,8 +127,18 @@ export function Hero() {
       <div className="flex flex-col gap-3">
         <div className="flex items-end justify-between gap-4">
           <PitchReadout />
-          <span className="label-mono text-fundacao/60">33⅓</span>
+          <button
+            type="button"
+            onClick={() => void deck.cue((track + 1) % TRACKS.length)}
+            className="label-mono group flex items-center gap-2 text-fundacao"
+            aria-label={`Trocar o disco. No prato: ${TRACKS[track].artist}, arte ${ARTS[track].name}`}
+          >
+            <span className="text-fundacao/60">Disco</span> {TRACKS[track].side}
+            {TRACKS[track].n}
+            <span className="inline-block transition-transform duration-300 ease-out group-hover:rotate-180 group-active:rotate-180">↻</span>
+          </button>
         </div>
+        <PitchFader className="-my-1 text-fundacao" />
         <h1 className="sr-only">
           {EVENT.name}, {EVENT.weekday} {EVENT.dateLabel}, {EVENT.hours}
         </h1>
