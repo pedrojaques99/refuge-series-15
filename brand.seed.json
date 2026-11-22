@@ -1,0 +1,16 @@
+{
+  "id": "refuge-figma-yrSLfvtXhUzujOnuvq2C5H",
+  "name": "Refuge®",
+  "colors": [
+    {"hex":"#0D0D0D","name":"Fundação","role":"background","usageRank":1},
+    {"hex":"#F2EEE3","name":"Sinal","role":"text","usageRank":2},
+    {"hex":"#706C64","name":"Estrutura","role":"secondary","usageRank":3},
+    {"hex":"#DCD8CE","name":"Superfície","role":"surface","usageRank":4},
+    {"hex":"#F1F0EC","name":"Cal","role":"accent","usageRank":5},
+    {"hex":"#EAE9D6","name":"Areia Clara","role":"muted","usageRank":6}
+  ],
+  "typography": [
+    {"family":"Special Gothic Expanded One","role":"display","size":96},
+    {"family":"Geist","role":"body","size":16}
+  ]
+}

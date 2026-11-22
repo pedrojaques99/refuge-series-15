@@ -1,0 +1,48 @@
+/* @visant/magnetic-cta */
+.magnet-body {
+  transition: transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)), scale var(--dur-fast, 140ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)), background-color var(--dur-fast, 140ms) linear;
+}
+.magnet-field[data-magnet=hold] .magnet-body {
+  will-change: transform;
+}
+.magnet-field[data-magnet=rest] .magnet-body, .magnet-field[data-magnet=rest] .magnet-label {
+  transition-duration: 620ms;
+  transition-timing-function: cubic-bezier(0.22, 1.35, 0.36, 1);
+}
+.magnet-label {
+  transform: translate3d(calc(var(--mx, 0px) * var(--lag, 0.35) * -1), calc(var(--my, 0px) * var(--lag, 0.35) * -1), 0);
+  transition: transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1));
+}
+.magnet-sheen {
+  background: radial-gradient(130px 130px at var(--sx, 50%) var(--sy, 50%), color-mix(in oklab, var(--brand-foreground, var(--background)) 24%, transparent), transparent 72%);
+  opacity: 0;
+  transition: opacity var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1));
+}
+.magnet-field[data-magnet=hold] .magnet-sheen {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .magnet-body, .magnet-label {
+    transform: none;
+    transition: none;
+  }
+  .magnet-sheen {
+    display: none;
+  }
+}
+.magnet-field[data-magnet=rest] .magnet-sheen {
+  transition-duration: var(--dur-fast, 140ms);
+}
+
+/* @visant/marquee */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    transform: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
+}
+
